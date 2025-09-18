@@ -6,11 +6,22 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Edit, Plus, Trash2 } from 'lucide-react';
 import { RuleDialog } from './rule-dialog';
+import { format } from 'date-fns';
 
 export default function RulesPage() {
     const getCategoryName = (categoryId: string) => {
         return categories.find(c => c.id === categoryId)?.name || 'Unknown';
     };
+
+    const formatValue = (field: string, value: string | number) => {
+        if (field === 'date') {
+            return format(new Date(value as string), 'MMM d, yyyy');
+        }
+        if (field === 'amount') {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value as number);
+        }
+        return value;
+    }
 
     return (
         <div className="space-y-6">
@@ -41,23 +52,22 @@ export default function RulesPage() {
                                 {rules.map((rule) => (
                                     <TableRow key={rule.id}>
                                         <TableCell>
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <span className="font-mono text-xs">IF</span>
-                                                <div className="flex flex-col gap-2">
-                                                    {rule.conditions.map((condition, index) => (
-                                                        <div key={condition.id} className="flex flex-wrap items-center gap-2">
-                                                            {index > 0 && <span className="font-mono text-xs">AND</span>}
-                                                            <Badge variant="outline">{condition.field}</Badge>
-                                                            <Badge variant="secondary">{condition.operator.replace(/_/g, ' ')}</Badge>
-                                                            <Badge variant="outline" className="font-mono">{condition.value}</Badge>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                                            <div className="flex flex-col items-start gap-2">
+                                                {rule.conditions.map((condition, index) => (
+                                                    <div key={condition.id} className="flex flex-wrap items-center gap-2">
+                                                        <span className="font-mono text-xs">{index === 0 ? 'IF' : 'AND'}</span>
+                                                        <Badge variant="outline">{condition.field}</Badge>
+                                                        <Badge variant="secondary">{condition.operator.replace(/_/g, ' ')}</Badge>
+                                                        <Badge variant="outline" className="font-mono">{formatValue(condition.field, condition.value)}</Badge>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge>{getCategoryName(rule.categoryId)}</Badge>
+                                            <div className="flex items-center gap-2">
+                                                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                                                <Badge>{getCategoryName(rule.categoryId)}</Badge>
+                                            </div>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
