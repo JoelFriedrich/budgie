@@ -48,9 +48,9 @@ export default function SettingsPage() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Email Setup</CardTitle>
+                        <CardTitle>Email Forwarding</CardTitle>
                         <CardDescription>
-                            Set up a forwarding rule in your email client to send transaction receipts to this address.
+                            Forward your transaction receipts to the address below to automatically track them.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -59,16 +59,17 @@ export default function SettingsPage() {
                         </p>
                         <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
                             <li>Go to your email provider's settings (e.g., Gmail, Outlook).</li>
-                            <li>Find the "Forwarding and POP/IMAP" section.</li>
-                            <li>Add a new forwarding address and paste the email below.</li>
-                            <li>Create a filter to automatically forward emails from your bank or services (e.g., with subjects like "Your receipt" or "Transaction alert").</li>
+                            <li>Find the "Forwarding" section.</li>
+                            <li>Add the email address below as a new forwarding address.</li>
+                            <li>Create a filter to automatically forward emails from your bank or other services (e.g., with subjects like "Your receipt" or "Transaction alert").</li>
                         </ol>
                         <div className="flex w-full max-w-sm items-center space-x-2">
-                            <Input type="email" readOnly value={userEmailAlias} className="font-mono" />
+                            <Label htmlFor="forwarding-email" className="sr-only">Forwarding Email</Label>
+                            <Input id="forwarding-email" type="email" readOnly value={userEmailAlias} className="font-mono" />
                             <CopyButton textToCopy={userEmailAlias} />
                         </div>
                         <p className="text-xs text-muted-foreground pt-4">
-                            Note: For this demo, this is an illustrative email address. Transaction parsing is simulated.
+                            Note: This is an illustrative email address. In a real app, you would connect this to an email processing service.
                         </p>
                     </CardContent>
                 </Card>
