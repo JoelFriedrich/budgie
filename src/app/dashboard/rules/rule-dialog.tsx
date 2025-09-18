@@ -69,7 +69,15 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
 
     const handleFieldChange = (id: string, newField: Condition['field']) => {
         const newOperator = fieldOperators[newField][0].value;
-        const newValue = newField === 'amount' ? 0.00 : (newField === 'day_of_month' ? 1 : '');
+        // This is the critical fix: Ensure the value's type matches the new field type.
+        let newValue: string | number;
+        if (newField === 'amount') {
+            newValue = 0.00;
+        } else if (newField === 'day_of_month') {
+            newValue = 1;
+        } else {
+            newValue = '';
+        }
         setConditions(conditions.map(c => c.id === id ? { ...c, field: newField, operator: newOperator, value: newValue } : c));
     };
 
@@ -185,7 +193,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                   </div>
                   <p className="font-mono text-sm font-bold">THEN ASSIGN CATEGORY</p>
                   <div className="rounded-md border p-4">
-                      <Select name="categoryId" defaultValue={rule?.categoryId}>
+                      <Select name="categoryId" defaultValue={rule?.categoryId} required>
                           <SelectTrigger>
                               <SelectValue placeholder="Select a category" />
                           </SelectTrigger>
