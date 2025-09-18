@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { CopyButton } from './copy-button';
 import { ThemeToggle } from './theme-toggle';
+import { GoalsSettings } from './goals-settings';
 
 export default function SettingsPage() {
     const username = "username"; // In a real app, this would come from user state
@@ -28,6 +29,8 @@ export default function SettingsPage() {
                         <ThemeToggle />
                     </CardHeader>
                 </Card>
+
+                <GoalsSettings />
 
                 <Card>
                     <CardHeader>

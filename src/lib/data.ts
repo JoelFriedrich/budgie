@@ -7,6 +7,7 @@ export const categories: Category[] = [
   { id: '4', name: 'Restaurants', icon: 'Utensils', color: 'hsl(340 70% 60%)', budget: 250 },
   { id: '5', name: 'Subscriptions', icon: 'Youtube', color: 'hsl(0 70% 60%)', budget: 50 },
   { id: '6', name: 'Shopping', icon: 'ShoppingBag', color: 'hsl(300 70% 60%)', budget: 200 },
+  { id: '7', name: 'Savings', icon: 'PiggyBank', color: 'hsl(100 70% 60%)', budget: 300 },
 ];
 
 export const transactions: Transaction[] = [
