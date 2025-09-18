@@ -69,7 +69,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
 
     const handleFieldChange = (id: string, newField: Condition['field']) => {
         const newOperator = fieldOperators[newField][0].value;
-        const newValue = newField === 'amount' || newField === 'day_of_month' ? 1 : '';
+        const newValue = newField === 'amount' ? 0.00 : (newField === 'day_of_month' ? 1 : '');
         setConditions(conditions.map(c => c.id === id ? { ...c, field: newField, operator: newOperator, value: newValue } : c));
     };
 
@@ -97,6 +97,10 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
         const isDayOfMonth = condition.field === 'day_of_month';
 
         if (isAmount || isDayOfMonth) {
+            const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                 const numValue = isAmount ? parseFloat(e.target.value) : parseInt(e.target.value, 10);
+                 handleConditionChange(condition.id, 'value', isNaN(numValue) ? 0 : numValue);
+            }
             return (
                 <Input 
                     name={`value-${condition.id}`} 
@@ -104,8 +108,8 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                     step={isAmount ? '0.01' : '1'}
                     min={isDayOfMonth ? 1 : undefined}
                     max={isDayOfMonth ? 31 : undefined}
-                    value={condition.value.toString()} 
-                    onChange={(e) => handleConditionChange(condition.id, 'value', e.target.value)} 
+                    value={condition.value} 
+                    onChange={handleNumericChange} 
                     placeholder={isDayOfMonth ? 'Day (1-31)' : "Value"}
                     required 
                 />
@@ -116,7 +120,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
              <Input 
                 name={`value-${condition.id}`} 
                 type="text"
-                value={condition.value.toString()} 
+                value={condition.value} 
                 onChange={(e) => handleConditionChange(condition.id, 'value', e.target.value)} 
                 placeholder="Value"
                 required 
