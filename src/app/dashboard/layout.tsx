@@ -6,7 +6,6 @@ import {
   SidebarHeader,
   SidebarContent,
   SidebarTrigger,
-  SidebarInset,
 } from '@/components/ui/sidebar';
 
 export default function DashboardLayout({
@@ -16,7 +15,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <Sidebar>
+      <Sidebar collapsible="icon">
         <SidebarHeader>
           <Logo />
           <SidebarTrigger className="hidden md:flex" />
