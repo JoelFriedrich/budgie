@@ -18,7 +18,7 @@ export type Category = {
 export type Condition = {
   id: string;
   field: 'vendor' | 'description' | 'amount';
-  operator: 'contains' | 'equals' | 'greater_than' | 'less_than';
+  operator: 'contains' | 'does_not_contain' | 'equals' | 'greater_than' | 'less_than';
   value: string | number;
 };
 

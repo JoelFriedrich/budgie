@@ -93,6 +93,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                                    </SelectTrigger>
                                    <SelectContent>
                                        <SelectItem value="contains">contains</SelectItem>
+                                       <SelectItem value="does_not_contain">does not contain</SelectItem>
                                        <SelectItem value="equals">equals</SelectItem>
                                        <SelectItem value="greater_than">is greater than</SelectItem>
                                        <SelectItem value="less_than">is less than</SelectItem>
