@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import type { Transaction, Category } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,6 +33,11 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
   const [isSuggesting, startSuggestionTransition] = useTransition();
   const { toast } = useToast();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleCategoryChange = (transactionId: string, categoryId: string) => {
     setTransactions((prev) =>
@@ -143,7 +148,7 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
                 const category = getCategory(transaction.category);
                 return (
                     <TableRow key={transaction.id} className="transition-colors duration-300 ease-in-out">
-                    <TableCell className="text-nowrap">{formatDate(transaction.date)}</TableCell>
+                    <TableCell className="text-nowrap">{isClient ? formatDate(transaction.date) : ''}</TableCell>
                     <TableCell>
                         <div className="font-medium">{transaction.vendor}</div>
                         <div className="text-sm text-muted-foreground">{transaction.description}</div>
