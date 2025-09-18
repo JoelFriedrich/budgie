@@ -1,7 +1,6 @@
 import { transactions, categories } from '@/lib/data';
 import { TransactionsClient } from './transactions-client';
 import { PageHeader } from '@/components/page-header';
-import { EmailParser } from './email-parser';
 
 export default function DashboardPage() {
   // In a real app, you'd fetch this data from a database
@@ -15,7 +14,6 @@ export default function DashboardPage() {
           title="Transactions"
           description="Here's a list of your recent transactions."
         />
-        <EmailParser />
       </div>
       <TransactionsClient
         initialTransactions={initialTransactions}
