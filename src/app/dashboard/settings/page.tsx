@@ -7,7 +7,8 @@ import { CopyButton } from './copy-button';
 import { ThemeToggle } from './theme-toggle';
 
 export default function SettingsPage() {
-    const userEmailAlias = 'budgetapp+username@email.com';
+    const username = "username"; // In a real app, this would come from user state
+    const userEmailAlias = `budgieapp+${username}@gmail.com`;
 
     return (
         <div className="space-y-8">
