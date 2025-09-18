@@ -83,7 +83,7 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
                 <TableHead>Vendor</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead className="sticky right-0 bg-card w-[60px]"></TableHead>
+                <TableHead className="sticky right-0 bg-card w-auto"></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
