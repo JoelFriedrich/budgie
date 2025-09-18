@@ -8,8 +8,8 @@ export default function Home() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md text-center shadow-2xl">
         <CardHeader>
-          <div className="mx-auto mb-4 flex h-40 w-40 items-center justify-center rounded-full bg-black text-primary-foreground">
-            <Image src="/budgie.png" alt="Budgie Logo" width={120} height={120} />
+          <div className="mx-auto mb-2 flex h-40 w-40 items-center justify-center rounded-full bg-black text-primary-foreground">
+            <Image src="/budgie.png" alt="Budgie Logo" width={405} height={405} />
           </div>
           <CardTitle className="text-4xl font-bold">
             Welcome to Budgie
