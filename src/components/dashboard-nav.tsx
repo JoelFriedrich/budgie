@@ -17,8 +17,8 @@ import {
 } from '@/components/ui/sidebar';
 
 const navItems = [
-  { href: '/dashboard', icon: List, label: 'Transactions' },
   { href: '/dashboard/overview', icon: PieChart, label: 'Overview' },
+  { href: '/dashboard/transactions', icon: List, label: 'Transactions' },
   { href: '/dashboard/rules', icon: BookA, label: 'Rules' },
   { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
 ];
@@ -37,7 +37,7 @@ export function DashboardNav() {
         <SidebarMenuItem key={item.href}>
           <SidebarMenuButton
             asChild
-            isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true)}
+            isActive={pathname === item.href}
             tooltip={item.label}
             onClick={handleLinkClick}
           >
