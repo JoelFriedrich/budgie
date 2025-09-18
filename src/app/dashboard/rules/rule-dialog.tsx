@@ -20,13 +20,20 @@ import { useState } from "react"
 
 type RuleDialogProps = {
     children: React.ReactNode;
-    rule?: Rule;
+    rule?: Partial<Rule>;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
-export function RuleDialog({ children, rule }: RuleDialogProps) {
+export function RuleDialog({ children, rule, open: controlledOpen, onOpenChange: setControlledOpen }: RuleDialogProps) {
     const { toast } = useToast();
-    const [open, setOpen] = useState(false);
-    const isEditMode = !!rule;
+    const [internalOpen, setInternalOpen] = useState(false);
+
+    const isControlled = controlledOpen !== undefined && setControlledOpen !== undefined;
+    const open = isControlled ? controlledOpen : internalOpen;
+    const setOpen = isControlled ? setControlledOpen : setInternalOpen;
+    
+    const isEditMode = !!(rule && rule.id);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -37,67 +44,79 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
         setOpen(false);
     }
 
+    const content = (
+      <DialogContent className="sm:max-w-xl">
+          <form onSubmit={handleSubmit}>
+              <DialogHeader>
+                  <DialogTitle>{isEditMode ? 'Edit Rule' : 'Create Rule'}</DialogTitle>
+                  <DialogDescription>
+                      Rules automatically categorize transactions that meet certain criteria.
+                  </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                  <p className="font-mono text-sm font-bold">IF</p>
+                  <div className="grid grid-cols-1 gap-2 rounded-md border p-4 sm:grid-cols-3">
+                      <Select name="field" defaultValue={rule?.field || 'vendor'}>
+                          <SelectTrigger>
+                              <SelectValue placeholder="Field" />
+                          </SelectTrigger>
+                          <SelectContent>
+                              <SelectItem value="vendor">Vendor</SelectItem>
+                              <SelectItem value="description">Description</SelectItem>
+                              <SelectItem value="amount">Amount</SelectItem>
+                          </SelectContent>
+                      </Select>
+                      <Select name="operator" defaultValue={rule?.operator || 'equals'}>
+                          <SelectTrigger>
+                              <SelectValue placeholder="Operator" />
+                          </SelectTrigger>
+                          <SelectContent>
+                              <SelectItem value="contains">contains</SelectItem>
+                              <SelectItem value="equals">equals</SelectItem>
+                              <SelectItem value="greater_than">is greater than</SelectItem>
+                              <SelectItem value="less_than">is less than</SelectItem>
+                          </SelectContent>
+                      </Select>
+                       <Input name="value" defaultValue={rule?.value || ''} placeholder="Value" required />
+                  </div>
+                  <p className="font-mono text-sm font-bold">THEN ASSIGN CATEGORY</p>
+                  <div className="rounded-md border p-4">
+                      <Select name="categoryId" defaultValue={rule?.categoryId}>
+                          <SelectTrigger>
+                              <SelectValue placeholder="Select a category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                              {categories.map(cat => (
+                                  <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                              ))}
+                          </SelectContent>
+                      </Select>
+                  </div>
+              </div>
+              <DialogFooter>
+                  <DialogClose asChild>
+                      <Button type="button" variant="ghost">Cancel</Button>
+                  </DialogClose>
+                  <Button type="submit">Save rule</Button>
+              </DialogFooter>
+          </form>
+      </DialogContent>
+    );
+
+    if (children) {
+      return (
+          <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                  {children}
+              </DialogTrigger>
+              {content}
+          </Dialog>
+      )
+    }
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-xl">
-                <form onSubmit={handleSubmit}>
-                    <DialogHeader>
-                        <DialogTitle>{isEditMode ? 'Edit Rule' : 'Create Rule'}</DialogTitle>
-                        <DialogDescription>
-                            Rules automatically categorize transactions that meet certain criteria.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <p className="font-mono text-sm font-bold">IF</p>
-                        <div className="grid grid-cols-1 gap-2 rounded-md border p-4 sm:grid-cols-3">
-                            <Select defaultValue={rule?.field || 'vendor'}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Field" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="vendor">Vendor</SelectItem>
-                                    <SelectItem value="description">Description</SelectItem>
-                                    <SelectItem value="amount">Amount</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <Select defaultValue={rule?.operator || 'contains'}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Operator" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="contains">contains</SelectItem>
-                                    <SelectItem value="equals">equals</SelectItem>
-                                    <SelectItem value="greater_than">is greater than</SelectItem>
-                                    <SelectItem value="less_than">is less than</SelectItem>
-                                </SelectContent>
-                            </Select>
-                             <Input defaultValue={rule?.value || ''} placeholder="Value" required />
-                        </div>
-                        <p className="font-mono text-sm font-bold">THEN ASSIGN CATEGORY</p>
-                        <div className="rounded-md border p-4">
-                            <Select defaultValue={rule?.categoryId}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a category" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {categories.map(cat => (
-                                        <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button type="button" variant="ghost">Cancel</Button>
-                        </DialogClose>
-                        <Button type="submit">Save rule</Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
+        {content}
+      </Dialog>
     )
 }

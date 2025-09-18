@@ -23,6 +23,7 @@ import { Wand2 } from 'lucide-react';
 import { suggestTransactionRules } from '@/ai/flows/suggest-transaction-rules';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
+import { TransactionActions } from './transaction-actions';
 
 type TransactionsClientProps = {
   initialTransactions: Transaction[];
@@ -89,7 +90,7 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
           suggestions.forEach(suggestion => {
             const category = categories.find(c => c.name.toLowerCase() === suggestion.category.toLowerCase());
             if (category) {
-              const originalTransaction = uncategorized.find(t => t.vendor === suggestion.vendor && t.description === suggestion.description);
+              const originalTransaction = uncategorized.find(t => t.vendor === suggestion.vendor);
               if (originalTransaction) {
                 const transactionIndex = updatedTransactions.findIndex(t => t.id === originalTransaction.id);
                 if (transactionIndex !== -1 && !updatedTransactions[transactionIndex].category) {
@@ -123,6 +124,17 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
       }
     });
   };
+  
+  const [editingTransactionId, setEditingTransactionId] = useState<string | null>(null);
+
+  const onEdit = (transactionId: string) => {
+    setEditingTransactionId(transactionId);
+  }
+
+  const onSaveCategory = (transactionId: string, categoryId: string) => {
+    handleCategoryChange(transactionId, categoryId);
+    setEditingTransactionId(null);
+  }
 
   return (
     <Card>
@@ -141,11 +153,13 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
                 <TableHead>Vendor</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Category</TableHead>
+                <TableHead className="w-[40px]"></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {transactions.map((transaction) => {
                 const category = getCategory(transaction.category);
+                const isEditing = editingTransactionId === transaction.id;
                 return (
                     <TableRow key={transaction.id} className="transition-colors duration-300 ease-in-out">
                     <TableCell className="text-nowrap">{isClient ? formatDate(transaction.date) : ''}</TableCell>
@@ -155,13 +169,10 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
                     </TableCell>
                     <TableCell className="text-right text-nowrap">{formatCurrency(transaction.amount)}</TableCell>
                     <TableCell>
-                        {category ? (
-                        <Badge variant="outline" style={{ borderColor: category.color, color: category.color, backgroundColor: `${category.color}1A` }}>
-                            {category.name}
-                        </Badge>
-                        ) : (
+                        {isEditing || !category ? (
                         <Select
-                            onValueChange={(value) => handleCategoryChange(transaction.id, value)}
+                            value={category?.id}
+                            onValueChange={(value) => onSaveCategory(transaction.id, value)}
                         >
                             <SelectTrigger className="w-[180px] h-8 text-xs">
                             <SelectValue placeholder="Select category" />
@@ -174,7 +185,14 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
                             ))}
                             </SelectContent>
                         </Select>
+                        ) : (
+                        <Badge variant="outline" style={{ borderColor: category.color, color: category.color, backgroundColor: `${category.color}1A` }}>
+                            {category.name}
+                        </Badge>
                         )}
+                    </TableCell>
+                    <TableCell>
+                      <TransactionActions transaction={transaction} onEdit={onEdit} />
                     </TableCell>
                     </TableRow>
                 );

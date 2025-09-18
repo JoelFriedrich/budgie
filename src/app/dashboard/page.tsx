@@ -10,7 +10,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Dashboard"
+        title="Transactions"
         description="Here's a list of your recent transactions."
       />
       <TransactionsClient

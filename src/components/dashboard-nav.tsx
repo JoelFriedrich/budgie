@@ -8,6 +8,7 @@ import {
   BookA,
   MailPlus,
   PieChart,
+  List,
 } from 'lucide-react';
 import {
   SidebarMenu,
@@ -16,7 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 
 const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/dashboard', icon: List, label: 'Transactions' },
   { href: '/dashboard/overview', icon: PieChart, label: 'Overview' },
   { href: '/dashboard/categories', icon: WalletCards, label: 'Categories' },
   { href: '/dashboard/rules', icon: BookA, label: 'Rules' },
