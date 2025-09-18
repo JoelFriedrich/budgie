@@ -11,7 +11,7 @@ export default function Home() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <Wallet className="h-8 w-8" />
           </div>
-          <CardTitle className="font-headline text-4xl">
+          <CardTitle className="text-4xl font-bold">
             Welcome to Budgie
           </CardTitle>
           <CardDescription className="text-lg text-muted-foreground">
@@ -22,7 +22,7 @@ export default function Home() {
           <p className="mb-6">
             Forward your transaction emails, and Budgie handles the rest. We parse, categorize, and display your spending, all in one place.
           </p>
-          <Button asChild size="lg" className="font-headline">
+          <Button asChild size="lg">
             <Link href="/dashboard">Go to Dashboard</Link>
           </Button>
         </CardContent>
