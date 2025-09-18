@@ -15,6 +15,13 @@ const Icon = ({ name, className }: { name: string, className?: string }) => {
     return <Circle className={className} />; // Fallback icon
 };
 
+const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    }).format(amount);
+};
+
 export default function CategoriesPage() {
     return (
         <div className="space-y-6">
@@ -38,6 +45,7 @@ export default function CategoriesPage() {
                                 <TableRow>
                                     <TableHead className="w-[80px]">Icon</TableHead>
                                     <TableHead>Name</TableHead>
+                                    <TableHead className="text-right">Budget</TableHead>
                                     <TableHead className="w-[150px] text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -50,6 +58,7 @@ export default function CategoriesPage() {
                                             </div>
                                         </TableCell>
                                         <TableCell className="font-medium">{category.name}</TableCell>
+                                        <TableCell className="text-right font-medium">{formatCurrency(category.budget || 0)}</TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
                                                 <CategoryDialog category={category}>
