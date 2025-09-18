@@ -12,6 +12,7 @@ export type Category = {
   name: string;
   icon: string; // lucide-react icon name
   color: string;
+  budget: number;
 };
 
 export type Rule = {

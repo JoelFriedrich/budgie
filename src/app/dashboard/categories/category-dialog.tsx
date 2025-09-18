@@ -56,6 +56,12 @@ export function CategoryDialog({ children, category }: CategoryDialogProps) {
                             </Label>
                             <Input id="name" defaultValue={category?.name || ''} className="col-span-3" required />
                         </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="budget" className="text-right">
+                                Budget
+                            </Label>
+                            <Input id="budget" type="number" step="0.01" defaultValue={category?.budget || 0} className="col-span-3" required />
+                        </div>
                     </div>
                     <DialogFooter>
                        <DialogClose asChild>

@@ -1,12 +1,12 @@
 import { Transaction, Category, Rule } from './types';
 
 export const categories: Category[] = [
-  { id: '1', name: 'Groceries', icon: 'ShoppingCart', color: 'hsl(140 70% 60%)' },
-  { id: '2', name: 'Coffee', icon: 'Coffee', color: 'hsl(25 70% 60%)' },
-  { id: '3', name: 'Transportation', icon: 'Bus', color: 'hsl(210 70% 60%)' },
-  { id: '4', name: 'Restaurants', icon: 'Utensils', color: 'hsl(340 70% 60%)' },
-  { id: '5', name: 'Subscriptions', icon: 'Youtube', color: 'hsl(0 70% 60%)' },
-  { id: '6', name: 'Shopping', icon: 'ShoppingBag', color: 'hsl(300 70% 60%)' },
+  { id: '1', name: 'Groceries', icon: 'ShoppingCart', color: 'hsl(140 70% 60%)', budget: 400 },
+  { id: '2', name: 'Coffee', icon: 'Coffee', color: 'hsl(25 70% 60%)', budget: 50 },
+  { id: '3', name: 'Transportation', icon: 'Bus', color: 'hsl(210 70% 60%)', budget: 100 },
+  { id: '4', name: 'Restaurants', icon: 'Utensils', color: 'hsl(340 70% 60%)', budget: 250 },
+  { id: '5', name: 'Subscriptions', icon: 'Youtube', color: 'hsl(0 70% 60%)', budget: 50 },
+  { id: '6', name: 'Shopping', icon: 'ShoppingBag', color: 'hsl(300 70% 60%)', budget: 200 },
 ];
 
 export const transactions: Transaction[] = [
