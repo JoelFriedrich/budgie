@@ -9,7 +9,7 @@ export default function Home() {
       <Card className="w-full max-w-md text-center shadow-2xl">
         <CardHeader>
           <div className="mx-auto mb-4 flex h-40 w-40 items-center justify-center rounded-full bg-black text-primary-foreground">
-            <Image src="/budgie.png" alt="Budgie Logo" width={80} height={80} />
+            <Image src="/budgie.png" alt="Budgie Logo" width={120} height={120} />
           </div>
           <CardTitle className="text-4xl font-bold">
             Welcome to Budgie
