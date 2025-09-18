@@ -15,25 +15,34 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { categories } from "@/lib/data"
-import type { Rule } from "@/lib/types"
+import type { Rule, Condition } from "@/lib/types"
+import { PlusCircle, Trash2 } from "lucide-react"
 import { useState } from "react"
 
 type RuleDialogProps = {
     children: React.ReactNode;
-    rule?: Partial<Rule>;
-    open?: boolean;
-    onOpenChange?: (open: boolean) => void;
+    rule?: Rule;
 }
 
-export function RuleDialog({ children, rule, open: controlledOpen, onOpenChange: setControlledOpen }: RuleDialogProps) {
-    const { toast } = useToast();
-    const [internalOpen, setInternalOpen] = useState(false);
+const defaultCondition: Condition = { id: Date.now().toString(), field: 'vendor', operator: 'contains', value: '' };
 
-    const isControlled = controlledOpen !== undefined && setControlledOpen !== undefined;
-    const open = isControlled ? controlledOpen : internalOpen;
-    const setOpen = isControlled ? setControlledOpen : setInternalOpen;
-    
-    const isEditMode = !!(rule && rule.id);
+export function RuleDialog({ children, rule }: RuleDialogProps) {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+    const isEditMode = !!rule;
+    const [conditions, setConditions] = useState<Condition[]>(rule?.conditions || [defaultCondition]);
+
+    const handleAddCondition = () => {
+        setConditions([...conditions, { ...defaultCondition, id: Date.now().toString() }]);
+    };
+
+    const handleRemoveCondition = (id: string) => {
+        setConditions(conditions.filter(c => c.id !== id));
+    };
+
+    const handleConditionChange = (id: string, field: keyof Condition, value: string) => {
+        setConditions(conditions.map(c => c.id === id ? { ...c, [field]: value } : c));
+    };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -42,6 +51,14 @@ export function RuleDialog({ children, rule, open: controlledOpen, onOpenChange:
             description: "Your changes have been saved (simulated).",
         });
         setOpen(false);
+    }
+
+    const onOpenChange = (isOpen: boolean) => {
+        if (!isOpen) {
+             // Reset conditions when closing if not editing an existing rule
+            setConditions(rule?.conditions || [defaultCondition]);
+        }
+        setOpen(isOpen);
     }
 
     const content = (
@@ -55,29 +72,46 @@ export function RuleDialog({ children, rule, open: controlledOpen, onOpenChange:
               </DialogHeader>
               <div className="grid gap-4 py-4">
                   <p className="font-mono text-sm font-bold">IF</p>
-                  <div className="grid grid-cols-1 gap-2 rounded-md border p-4 sm:grid-cols-3">
-                      <Select name="field" defaultValue={rule?.field || 'vendor'}>
-                          <SelectTrigger>
-                              <SelectValue placeholder="Field" />
-                          </SelectTrigger>
-                          <SelectContent>
-                              <SelectItem value="vendor">Vendor</SelectItem>
-                              <SelectItem value="description">Description</SelectItem>
-                              <SelectItem value="amount">Amount</SelectItem>
-                          </SelectContent>
-                      </Select>
-                      <Select name="operator" defaultValue={rule?.operator || 'equals'}>
-                          <SelectTrigger>
-                              <SelectValue placeholder="Operator" />
-                          </SelectTrigger>
-                          <SelectContent>
-                              <SelectItem value="contains">contains</SelectItem>
-                              <SelectItem value="equals">equals</SelectItem>
-                              <SelectItem value="greater_than">is greater than</SelectItem>
-                              <SelectItem value="less_than">is less than</SelectItem>
-                          </SelectContent>
-                      </Select>
-                       <Input name="value" defaultValue={rule?.value || ''} placeholder="Value" required />
+                  <div className="space-y-4 rounded-md border p-4">
+                     {conditions.map((condition, index) => (
+                        <div key={condition.id} className="space-y-2">
+                           {index > 0 && <p className="font-mono text-sm font-bold text-center">AND</p>}
+                           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                               <Select name={`field-${condition.id}`} value={condition.field} onValueChange={(value) => handleConditionChange(condition.id, 'field', value)}>
+                                   <SelectTrigger>
+                                       <SelectValue placeholder="Field" />
+                                   </SelectTrigger>
+                                   <SelectContent>
+                                       <SelectItem value="vendor">Vendor</SelectItem>
+                                       <SelectItem value="description">Description</SelectItem>
+                                       <SelectItem value="amount">Amount</SelectItem>
+                                   </SelectContent>
+                               </Select>
+                               <Select name={`operator-${condition.id}`} value={condition.operator} onValueChange={(value) => handleConditionChange(condition.id, 'operator', value)}>
+                                   <SelectTrigger>
+                                       <SelectValue placeholder="Operator" />
+                                   </SelectTrigger>
+                                   <SelectContent>
+                                       <SelectItem value="contains">contains</SelectItem>
+                                       <SelectItem value="equals">equals</SelectItem>
+                                       <SelectItem value="greater_than">is greater than</SelectItem>
+                                       <SelectItem value="less_than">is less than</SelectItem>
+                                   </SelectContent>
+                               </Select>
+                                <Input name={`value-${condition.id}`} value={condition.value.toString()} onChange={(e) => handleConditionChange(condition.id, 'value', e.target.value)} placeholder="Value" required />
+                           </div>
+                           {conditions.length > 1 && (
+                               <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleRemoveCondition(condition.id)}>
+                                    <Trash2 className="mr-2 h-4 w-4"/>
+                                    Remove Condition
+                               </Button>
+                           )}
+                        </div>
+                     ))}
+                     <Button type="button" variant="outline" size="sm" onClick={handleAddCondition}>
+                        <PlusCircle className="mr-2 h-4 w-4"/>
+                        Add Condition
+                     </Button>
                   </div>
                   <p className="font-mono text-sm font-bold">THEN ASSIGN CATEGORY</p>
                   <div className="rounded-md border p-4">
@@ -103,20 +137,12 @@ export function RuleDialog({ children, rule, open: controlledOpen, onOpenChange:
       </DialogContent>
     );
 
-    if (children) {
-      return (
-          <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                  {children}
-              </DialogTrigger>
-              {content}
-          </Dialog>
-      )
-    }
-
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        {content}
-      </Dialog>
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogTrigger asChild>
+                {children}
+            </DialogTrigger>
+            {content}
+        </Dialog>
     )
 }

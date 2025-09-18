@@ -43,9 +43,16 @@ export default function RulesPage() {
                                         <TableCell>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <span className="font-mono text-xs">IF</span>
-                                                <Badge variant="outline">{rule.field}</Badge>
-                                                <Badge variant="secondary">{rule.operator.replace(/_/g, ' ')}</Badge>
-                                                <Badge variant="outline" className="font-mono">{rule.value}</Badge>
+                                                <div className="flex flex-col gap-2">
+                                                    {rule.conditions.map((condition, index) => (
+                                                        <div key={condition.id} className="flex flex-wrap items-center gap-2">
+                                                            {index > 0 && <span className="font-mono text-xs">AND</span>}
+                                                            <Badge variant="outline">{condition.field}</Badge>
+                                                            <Badge variant="secondary">{condition.operator.replace(/_/g, ' ')}</Badge>
+                                                            <Badge variant="outline" className="font-mono">{condition.value}</Badge>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                                 <ArrowRight className="h-4 w-4 text-muted-foreground" />
                                             </div>
                                         </TableCell>

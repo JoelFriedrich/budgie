@@ -15,10 +15,15 @@ export type Category = {
   budget: number;
 };
 
-export type Rule = {
+export type Condition = {
   id: string;
   field: 'vendor' | 'description' | 'amount';
   operator: 'contains' | 'equals' | 'greater_than' | 'less_than';
   value: string | number;
+};
+
+export type Rule = {
+  id: string;
+  conditions: Condition[];
   categoryId: string;
 };

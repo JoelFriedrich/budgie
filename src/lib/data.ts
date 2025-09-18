@@ -25,11 +25,11 @@ export const transactions: Transaction[] = [
 ];
 
 export const rules: Rule[] = [
-  { id: '1', field: 'vendor', operator: 'contains', value: 'Starbucks', categoryId: '2' },
-  { id: '2', field: 'vendor', operator: 'contains', value: 'Blue Bottle', categoryId: '2' },
-  { id: '3', field: 'vendor', operator: 'contains', value: 'Whole Foods', categoryId: '1' },
-  { id: '4', field: 'vendor', operator: 'contains', value: 'Trader Joe', categoryId: '1' },
-  { id: '5', field: 'vendor', operator: 'contains', value: 'Uber', categoryId: '3' },
-  { id: '6', field: 'vendor', operator: 'contains', value: 'Lyft', categoryId: '3' },
-  { id: '7', field: 'description', operator: 'contains', value: 'subscription', categoryId: '5' },
+  { id: '1', conditions: [{ id: 'c1', field: 'vendor', operator: 'contains', value: 'Starbucks' }], categoryId: '2' },
+  { id: '2', conditions: [{ id: 'c2', field: 'vendor', operator: 'contains', value: 'Blue Bottle' }], categoryId: '2' },
+  { id: '3', conditions: [{ id: 'c3', field: 'vendor', operator: 'contains', value: 'Whole Foods' }], categoryId: '1' },
+  { id: '4', conditions: [{ id: 'c4', field: 'vendor', operator: 'contains', value: 'Trader Joe' }], categoryId: '1' },
+  { id: '5', conditions: [{ id: 'c5', field: 'vendor', operator: 'contains', value: 'Uber' }], categoryId: '3' },
+  { id: '6', conditions: [{ id: 'c6', field: 'vendor', operator: 'contains', value: 'Lyft' }], categoryId: '3' },
+  { id: '7', conditions: [{ id: 'c7', field: 'description', operator: 'contains', value: 'subscription' }], categoryId: '5' },
 ];
