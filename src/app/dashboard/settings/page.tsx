@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { CopyButton } from './copy-button';
+import { ThemeToggle } from './theme-toggle';
 
 export default function SettingsPage() {
     const userEmailAlias = 'budgetapp+username@email.com';
@@ -15,6 +16,18 @@ export default function SettingsPage() {
                 description="Manage your account and application settings."
             />
             <div className="grid gap-8">
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>Appearance</CardTitle>
+                        <CardDescription>
+                            Switch between light and dark mode.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ThemeToggle />
+                    </CardContent>
+                </Card>
+
                 <Card>
                     <CardHeader>
                         <CardTitle>Personal Information</CardTitle>
