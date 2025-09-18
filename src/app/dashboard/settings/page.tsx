@@ -18,15 +18,15 @@ export default function SettingsPage() {
             />
             <div className="grid gap-8">
                  <Card>
-                    <CardHeader>
-                        <CardTitle>Appearance</CardTitle>
-                        <CardDescription>
-                            Switch between light and dark mode.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle>Appearance</CardTitle>
+                            <CardDescription>
+                                Switch between light and dark mode.
+                            </CardDescription>
+                        </div>
                         <ThemeToggle />
-                    </CardContent>
+                    </CardHeader>
                 </Card>
 
                 <Card>
