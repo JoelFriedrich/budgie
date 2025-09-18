@@ -103,6 +103,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
             }
             return (
                 <Input 
+                    key={`${condition.id}-${condition.field}`}
                     name={`value-${condition.id}`} 
                     type={'number'}
                     step={isAmount ? '0.01' : '1'}
@@ -118,6 +119,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
         
         return (
              <Input 
+                key={`${condition.id}-${condition.field}`}
                 name={`value-${condition.id}`} 
                 type="text"
                 value={condition.value} 
@@ -168,11 +170,11 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                                 
                                 {renderValueInput(condition)}
                                 
-                               {conditions.length > 1 && (
+                               {conditions.length > 1 ? (
                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleRemoveCondition(condition.id)}>
                                         <Trash2 className="h-4 w-4"/>
                                    </Button>
-                               )}
+                               ): <div />}
                            </div>
                         </div>
                      ))}
