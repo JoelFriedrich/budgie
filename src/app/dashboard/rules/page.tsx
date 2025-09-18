@@ -17,11 +17,6 @@ export default function RulesPage() {
         if (field === 'amount') {
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value as number);
         }
-        if (field === 'day_of_month') {
-            const day = value as number;
-            const suffix = ["th", "st", "nd", "rd"][day % 100 > 3 && day % 100 < 21 ? 0 : day % 10] || "th";
-            return `${day}${suffix} of month`;
-        }
         return value;
     }
 

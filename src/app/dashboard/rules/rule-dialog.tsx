@@ -40,10 +40,6 @@ const fieldOperators: Record<Condition['field'], { value: Condition['operator'];
         { value: 'greater_than', label: 'is greater than' },
         { value: 'less_than', label: 'is less than' },
     ],
-    day_of_month: [
-        { value: 'is', label: 'is' },
-        { value: 'is_not', label: 'is not' },
-    ],
 };
 
 
@@ -89,8 +85,6 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
         let newValue: string | number;
         if (newField === 'amount') {
             newValue = 0;
-        } else if (newField === 'day_of_month') {
-            newValue = 1;
         } else {
             newValue = '';
         }
@@ -116,9 +110,8 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
     
     const renderValueInput = (condition: Condition) => {
         const isAmount = condition.field === 'amount';
-        const isDayOfMonth = condition.field === 'day_of_month';
 
-        if (isAmount || isDayOfMonth) {
+        if (isAmount) {
             const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                  const numValue = isAmount ? parseFloat(e.target.value) : parseInt(e.target.value, 10);
                  handleConditionChange(condition.id, 'value', isNaN(numValue) ? 0 : numValue);
@@ -129,11 +122,9 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                     name={`value-${condition.id}`} 
                     type={'number'}
                     step={isAmount ? '0.01' : '1'}
-                    min={isDayOfMonth ? 1 : undefined}
-                    max={isDayOfMonth ? 31 : undefined}
                     value={typeof condition.value === 'number' ? condition.value : ''}
                     onChange={handleNumericChange} 
-                    placeholder={isDayOfMonth ? 'Day (1-31)' : "Value"}
+                    placeholder={"Value"}
                     required 
                 />
             )
@@ -176,7 +167,6 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                                        <SelectItem value="vendor">Vendor</SelectItem>
                                        <SelectItem value="description">Description</SelectItem>
                                        <SelectItem value="amount">Amount</SelectItem>
-                                       <SelectItem value="day_of_month">Day of Month</SelectItem>
                                    </SelectContent>
                                </Select>
                                <Select name={`operator-${condition.id}`} value={condition.operator} onValueChange={(value) => handleConditionChange(condition.id, 'operator', value)}>
