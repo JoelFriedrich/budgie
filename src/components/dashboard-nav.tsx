@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard,
+  Settings,
   WalletCards,
   BookA,
-  MailPlus,
   PieChart,
   List,
 } from 'lucide-react';
@@ -21,7 +20,7 @@ const navItems = [
   { href: '/dashboard/overview', icon: PieChart, label: 'Overview' },
   { href: '/dashboard/categories', icon: WalletCards, label: 'Categories' },
   { href: '/dashboard/rules', icon: BookA, label: 'Rules' },
-  { href: '/dashboard/setup', icon: MailPlus, label: 'Setup' },
+  { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
 ];
 
 export function DashboardNav() {
