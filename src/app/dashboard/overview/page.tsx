@@ -5,6 +5,10 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import type { Category as CategoryType } from '@/lib/types';
 import { BudgetDialog } from './budget-dialog';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { CategoryDialog } from './category-dialog';
+
 
 export default function OverviewPage() {
     const transactionsByCategory = categories.map((category) => {
@@ -35,6 +39,12 @@ export default function OverviewPage() {
                     title="Budget Overview"
                     description="View and manage your category budgets."
                 />
+                 <CategoryDialog>
+                    <Button>
+                        <Plus className="mr-2 h-4 w-4" />
+                        New Category
+                    </Button>
+                </CategoryDialog>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {transactionsByCategory.map((category) => (

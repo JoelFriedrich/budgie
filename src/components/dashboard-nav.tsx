@@ -18,7 +18,6 @@ import {
 const navItems = [
   { href: '/dashboard', icon: List, label: 'Transactions' },
   { href: '/dashboard/overview', icon: PieChart, label: 'Overview' },
-  { href: '/dashboard/categories', icon: WalletCards, label: 'Categories' },
   { href: '/dashboard/rules', icon: BookA, label: 'Rules' },
   { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
 ];
