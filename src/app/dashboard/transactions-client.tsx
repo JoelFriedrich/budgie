@@ -153,7 +153,7 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
                 <TableHead>Vendor</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead className="w-[40px]"></TableHead>
+                <TableHead className="sticky right-0 bg-card w-[60px]"></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -191,7 +191,7 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
                         </Badge>
                         )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="sticky right-0 bg-card">
                       <TransactionActions transaction={transaction} onEdit={onEdit} />
                     </TableCell>
                     </TableRow>
