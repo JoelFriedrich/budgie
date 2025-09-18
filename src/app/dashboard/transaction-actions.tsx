@@ -4,28 +4,34 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Edit, BookA } from 'lucide-react';
+import { MoreHorizontal, Edit, BookA, Eye } from 'lucide-react';
 import type { Transaction } from '@/lib/types';
 import { RuleDialog } from './rules/rule-dialog';
 import { useState } from 'react';
+import { TransactionDetailsDialog } from './transaction-details-dialog';
 
 type TransactionActionsProps = {
   transaction: Transaction;
   onEdit: (transactionId: string) => void;
 };
 
-export function TransactionActions({ transaction, onEdit }: TransactionActionsProps) {
+export function TransactionActions({
+  transaction,
+  onEdit,
+}: TransactionActionsProps) {
   const [isRuleDialogOpen, setIsRuleDialogOpen] = useState(false);
-  
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+
   const ruleForTransaction = {
     field: 'vendor' as const,
     operator: 'equals' as const,
     value: transaction.vendor,
     categoryId: transaction.category || '',
-  }
+  };
 
   const handleCreateRule = () => {
     setIsRuleDialogOpen(true);
@@ -33,10 +39,15 @@ export function TransactionActions({ transaction, onEdit }: TransactionActionsPr
 
   return (
     <>
-      <RuleDialog 
+      <RuleDialog
         rule={ruleForTransaction}
         open={isRuleDialogOpen}
         onOpenChange={setIsRuleDialogOpen}
+      />
+      <TransactionDetailsDialog
+        transaction={transaction}
+        open={isDetailsDialogOpen}
+        onOpenChange={setIsDetailsDialogOpen}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -46,10 +57,15 @@ export function TransactionActions({ transaction, onEdit }: TransactionActionsPr
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => setIsDetailsDialogOpen(true)}>
+            <Eye className="mr-2 h-4 w-4" />
+            View details
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onEdit(transaction.id)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleCreateRule}>
             <BookA className="mr-2 h-4 w-4" />
             Create rule
