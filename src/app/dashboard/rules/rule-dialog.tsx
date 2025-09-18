@@ -24,8 +24,6 @@ type RuleDialogProps = {
     rule?: Rule;
 }
 
-const defaultCondition: Condition = { id: Date.now().toString(), field: 'vendor', operator: 'contains', value: '' };
-
 const fieldOperators: Record<Condition['field'], { value: Condition['operator']; label: string }[]> = {
     vendor: [
         { value: 'contains', label: 'contains' },
@@ -53,10 +51,29 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
     const isEditMode = !!rule;
-    const [conditions, setConditions] = useState<Condition[]>(rule?.conditions || [defaultCondition]);
+    
+    const getInitialConditions = () => {
+        if (rule?.conditions) {
+            return rule.conditions;
+        }
+        return [{ 
+            id: Date.now().toString(), 
+            field: 'vendor' as const, 
+            operator: 'contains' as const, 
+            value: '' 
+        }];
+    };
+
+    const [conditions, setConditions] = useState<Condition[]>(getInitialConditions());
 
     const handleAddCondition = () => {
-        setConditions([...conditions, { ...defaultCondition, id: Date.now().toString() }]);
+        const newCondition: Condition = {
+            id: Date.now().toString(),
+            field: 'vendor',
+            operator: 'contains',
+            value: ''
+        };
+        setConditions([...conditions, newCondition]);
     };
 
     const handleRemoveCondition = (id: string) => {
@@ -69,10 +86,9 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
 
     const handleFieldChange = (id: string, newField: Condition['field']) => {
         const newOperator = fieldOperators[newField][0].value;
-        // This is the critical fix: Ensure the value's type matches the new field type.
         let newValue: string | number;
         if (newField === 'amount') {
-            newValue = 0.00;
+            newValue = 0;
         } else if (newField === 'day_of_month') {
             newValue = 1;
         } else {
@@ -92,10 +108,8 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
 
     const onOpenChange = (isOpen: boolean) => {
         if (!isOpen) {
-             // Reset conditions when closing if not editing an existing rule
-            if (!isEditMode) {
-                setConditions([defaultCondition]);
-            }
+             // Reset conditions when closing
+             setConditions(getInitialConditions());
         }
         setOpen(isOpen);
     }
@@ -117,7 +131,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                     step={isAmount ? '0.01' : '1'}
                     min={isDayOfMonth ? 1 : undefined}
                     max={isDayOfMonth ? 31 : undefined}
-                    value={condition.value} 
+                    value={typeof condition.value === 'number' ? condition.value : ''}
                     onChange={handleNumericChange} 
                     placeholder={isDayOfMonth ? 'Day (1-31)' : "Value"}
                     required 
@@ -130,7 +144,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                 key={`${condition.id}-${condition.field}`}
                 name={`value-${condition.id}`} 
                 type="text"
-                value={condition.value} 
+                value={typeof condition.value === 'string' ? condition.value : ''} 
                 onChange={(e) => handleConditionChange(condition.id, 'value', e.target.value)} 
                 placeholder="Value"
                 required 
