@@ -14,11 +14,13 @@ export default function RulesPage() {
     };
 
     const formatValue = (field: string, value: string | number) => {
-        if (field === 'date') {
-            return format(new Date(value as string), 'MMM d, yyyy');
-        }
         if (field === 'amount') {
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value as number);
+        }
+        if (field === 'day_of_month') {
+            const day = value as number;
+            const suffix = ["th", "st", "nd", "rd"][day % 100 > 3 && day % 100 < 21 ? 0 : day % 10] || "th";
+            return `${day}${suffix} of month`;
         }
         return value;
     }
@@ -56,7 +58,7 @@ export default function RulesPage() {
                                                 {rule.conditions.map((condition, index) => (
                                                     <div key={condition.id} className="flex flex-wrap items-center gap-2">
                                                         <span className="font-mono text-xs">{index === 0 ? 'IF' : 'AND'}</span>
-                                                        <Badge variant="outline">{condition.field}</Badge>
+                                                        <Badge variant="outline">{condition.field.replace(/_/g, ' ')}</Badge>
                                                         <Badge variant="secondary">{condition.operator.replace(/_/g, ' ')}</Badge>
                                                         <Badge variant="outline" className="font-mono">{formatValue(condition.field, condition.value)}</Badge>
                                                     </div>

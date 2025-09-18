@@ -17,13 +17,13 @@ export type Category = {
 
 export type Condition = {
   id: string;
-  field: 'vendor' | 'description' | 'amount' | 'date';
-  operator: 'contains' | 'does_not_contain' | 'equals' | 'greater_than' | 'less_than' | 'date_is' | 'date_is_before' | 'date_is_after';
+  field: 'vendor' | 'description' | 'amount' | 'day_of_month';
+  operator: 'contains' | 'does_not_contain' | 'equals' | 'greater_than' | 'less_than' | 'is' | 'is_not';
   value: string | number;
 };
 
 export type Rule = {
-  id: string;
+  id:string;
   conditions: Condition[];
   categoryId: string;
-};
+}

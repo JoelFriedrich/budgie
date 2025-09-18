@@ -16,12 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast"
 import { categories } from "@/lib/data"
 import type { Rule, Condition } from "@/lib/types"
-import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react"
+import { PlusCircle, Trash2 } from "lucide-react"
 import { useState } from "react"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { cn } from "@/lib/utils"
-import { format } from 'date-fns';
 
 type RuleDialogProps = {
     children: React.ReactNode;
@@ -46,10 +42,9 @@ const fieldOperators: Record<Condition['field'], { value: Condition['operator'];
         { value: 'greater_than', label: 'is greater than' },
         { value: 'less_than', label: 'is less than' },
     ],
-    date: [
-        { value: 'date_is', label: 'is on' },
-        { value: 'date_is_before', label: 'is before' },
-        { value: 'date_is_after', label: 'is after' },
+    day_of_month: [
+        { value: 'is', label: 'is' },
+        { value: 'is_not', label: 'is not' },
     ],
 };
 
@@ -74,7 +69,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
 
     const handleFieldChange = (id: string, newField: Condition['field']) => {
         const newOperator = fieldOperators[newField][0].value;
-        const newValue = newField === 'date' ? new Date().toISOString() : newField === 'amount' ? 0 : '';
+        const newValue = newField === 'amount' || newField === 'day_of_month' ? 1 : '';
         setConditions(conditions.map(c => c.id === id ? { ...c, field: newField, operator: newOperator, value: newValue } : c));
     };
 
@@ -96,43 +91,19 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
     }
     
     const renderValueInput = (condition: Condition) => {
-        if (condition.field === 'date') {
-            return (
-                 <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant={"outline"}
-                            className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !condition.value && "text-muted-foreground"
-                            )}
-                        >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {condition.value ? format(new Date(condition.value as string), "PPP") : <span>Pick a date</span>}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                        <Calendar
-                            mode="single"
-                            selected={new Date(condition.value as string)}
-                            onSelect={(date) => handleConditionChange(condition.id, 'value', date?.toISOString() || '')}
-                            initialFocus
-                        />
-                    </PopoverContent>
-                </Popover>
-            )
-        }
-        
         const isAmount = condition.field === 'amount';
+        const isDayOfMonth = condition.field === 'day_of_month';
 
         return (
             <Input 
                 name={`value-${condition.id}`} 
-                type={isAmount ? 'number' : 'text'}
-                step={isAmount ? '0.01' : undefined}
+                type={'number'}
+                step={isAmount ? '0.01' : '1'}
+                min={isDayOfMonth ? 1 : undefined}
+                max={isDayOfMonth ? 31 : undefined}
                 value={condition.value.toString()} 
                 onChange={(e) => handleConditionChange(condition.id, 'value', e.target.value)} 
-                placeholder="Value" 
+                placeholder={isDayOfMonth ? 'Day (1-31)' : "Value"}
                 required 
             />
         )
@@ -162,7 +133,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                                        <SelectItem value="vendor">Vendor</SelectItem>
                                        <SelectItem value="description">Description</SelectItem>
                                        <SelectItem value="amount">Amount</SelectItem>
-                                       <SelectItem value="date">Date</SelectItem>
+                                       <SelectItem value="day_of_month">Day of Month</SelectItem>
                                    </SelectContent>
                                </Select>
                                <Select name={`operator-${condition.id}`} value={condition.operator} onValueChange={(value) => handleConditionChange(condition.id, 'operator', value)}>
