@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['Montserrat', 'sans-serif'],
+        headline: ['"Bitcount Grid Single Ink"', 'system-ui'],
         code: ['monospace'],
       },
       colors: {
