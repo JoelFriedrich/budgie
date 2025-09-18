@@ -19,6 +19,7 @@ export default function DashboardLayout({
       <Sidebar>
         <SidebarHeader>
           <Logo />
+          <SidebarTrigger className="hidden md:flex" />
         </SidebarHeader>
         <SidebarContent>
           <DashboardNav />
