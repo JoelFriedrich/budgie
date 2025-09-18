@@ -85,7 +85,9 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
     const onOpenChange = (isOpen: boolean) => {
         if (!isOpen) {
              // Reset conditions when closing if not editing an existing rule
-            setConditions(rule?.conditions || [defaultCondition]);
+            if (!isEditMode) {
+                setConditions([defaultCondition]);
+            }
         }
         setOpen(isOpen);
     }
@@ -94,16 +96,29 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
         const isAmount = condition.field === 'amount';
         const isDayOfMonth = condition.field === 'day_of_month';
 
+        if (isAmount || isDayOfMonth) {
+            return (
+                <Input 
+                    name={`value-${condition.id}`} 
+                    type={'number'}
+                    step={isAmount ? '0.01' : '1'}
+                    min={isDayOfMonth ? 1 : undefined}
+                    max={isDayOfMonth ? 31 : undefined}
+                    value={condition.value.toString()} 
+                    onChange={(e) => handleConditionChange(condition.id, 'value', e.target.value)} 
+                    placeholder={isDayOfMonth ? 'Day (1-31)' : "Value"}
+                    required 
+                />
+            )
+        }
+        
         return (
-            <Input 
+             <Input 
                 name={`value-${condition.id}`} 
-                type={'number'}
-                step={isAmount ? '0.01' : '1'}
-                min={isDayOfMonth ? 1 : undefined}
-                max={isDayOfMonth ? 31 : undefined}
+                type="text"
                 value={condition.value.toString()} 
                 onChange={(e) => handleConditionChange(condition.id, 'value', e.target.value)} 
-                placeholder={isDayOfMonth ? 'Day (1-31)' : "Value"}
+                placeholder="Value"
                 required 
             />
         )
@@ -124,7 +139,7 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                      {conditions.map((condition, index) => (
                         <div key={condition.id} className="space-y-2">
                            {index > 0 && <p className="font-mono text-sm font-bold text-center">AND</p>}
-                           <div className="grid grid-cols-1 gap-2 sm:grid-cols-4">
+                           <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_2fr_auto]">
                                <Select name={`field-${condition.id}`} value={condition.field} onValueChange={(value: Condition['field']) => handleFieldChange(condition.id, value)}>
                                    <SelectTrigger>
                                        <SelectValue placeholder="Field" />
@@ -146,15 +161,12 @@ export function RuleDialog({ children, rule }: RuleDialogProps) {
                                        ))}
                                    </SelectContent>
                                </Select>
-                                <div className="col-span-2">
-                                  {renderValueInput(condition)}
-                                </div>
-                           </div>
-                           <div className="flex items-center justify-end">
+                                
+                                {renderValueInput(condition)}
+                                
                                {conditions.length > 1 && (
-                                   <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleRemoveCondition(condition.id)}>
-                                        <Trash2 className="mr-2 h-4 w-4"/>
-                                        Remove
+                                   <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleRemoveCondition(condition.id)}>
+                                        <Trash2 className="h-4 w-4"/>
                                    </Button>
                                )}
                            </div>
