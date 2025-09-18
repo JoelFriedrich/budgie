@@ -26,12 +26,19 @@ export function TransactionActions({
   const [isRuleDialogOpen, setIsRuleDialogOpen] = useState(false);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
 
-  const ruleForTransaction = {
-    field: 'vendor' as const,
-    operator: 'equals' as const,
-    value: transaction.vendor,
+  const newRuleForTransaction = {
+    id: '',
+    conditions: [
+      {
+        id: '1',
+        field: 'vendor' as const,
+        operator: 'equals' as const,
+        value: transaction.vendor,
+      },
+    ],
     categoryId: transaction.category || '',
   };
+
 
   const handleCreateRule = () => {
     setIsRuleDialogOpen(true);
@@ -40,10 +47,14 @@ export function TransactionActions({
   return (
     <>
       <RuleDialog
-        rule={ruleForTransaction}
         open={isRuleDialogOpen}
         onOpenChange={setIsRuleDialogOpen}
-      />
+      >
+        <RuleDialog.Trigger>
+          <span />
+        </RuleDialog.Trigger>
+        <RuleDialog.Content rule={newRuleForTransaction}/>
+      </RuleDialog>
       <TransactionDetailsDialog
         transaction={transaction}
         open={isDetailsDialogOpen}
