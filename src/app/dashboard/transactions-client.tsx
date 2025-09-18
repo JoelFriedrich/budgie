@@ -162,12 +162,12 @@ export function TransactionsClient({ initialTransactions, categories }: Transact
                 const isEditing = editingTransactionId === transaction.id;
                 return (
                     <TableRow key={transaction.id} className="transition-colors duration-300 ease-in-out">
-                    <TableCell className="text-nowrap">{isClient ? formatDate(transaction.date) : ''}</TableCell>
+                    <TableCell className="whitespace-nowrap">{isClient ? formatDate(transaction.date) : ''}</TableCell>
                     <TableCell>
                         <div className="font-medium">{transaction.vendor}</div>
                         <div className="text-sm text-muted-foreground">{transaction.description}</div>
                     </TableCell>
-                    <TableCell className="text-right text-nowrap">{formatCurrency(transaction.amount)}</TableCell>
+                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(transaction.amount)}</TableCell>
                     <TableCell>
                         {isEditing || !category ? (
                         <Select
